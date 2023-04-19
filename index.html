@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+
+<body>
+    <div id="form">
+        <div class="formGroup" style="margin: 30px;">
+            <label for="name">Name</label>
+            <input type="text" class="formElement" id="name">
+            <span class="errorMessage"></span>
+        </div>
+
+        <div class="formGroup">
+            <label for="name">Description</label>
+            <input type="text" class="formElement" id="address">
+            <span class="errorMessage"></span>
+
+        </div>
+
+        <div class="bottom_login" style="margin: 20px;">
+            <button onclick='submit()' class="create">Create</button>
+            <button class="update" onclick="handleUpdate()">Update</button>
+        </div>
+        <div class="getIndex"></div>
+
+        <table class="table" border="1px">
+
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Address</th>
+            </tr>
+        </table>
+
+    </div>
+
+
+    <script src="main.js"></script>
+</body>
+
+</html>
