@@ -1,0 +1,136 @@
+<!-- @format -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="main.css" />
+  </head>
+
+  <body onload="getUser()">
+    <label for="search"></label>
+    <input
+      type="text"
+      id="search"
+      placeholder="Search name ..."
+      oninput="searchUsers()"
+    />
+
+    <label for="sort"></label>
+    <select name="sort" id="sort" onchange="sort()">
+      <option value="default">--Default Value--</option>
+      <option value="az">A -> Z</option>
+      <option value="za">Z- A</option>
+    </select>
+
+    <table id="table" border="1" cellpadding="15" cellspacing="0"></table>
+    <ul class="pagination"></ul>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.5/axios.min.js"
+      integrity="sha512-nnNHpffPSgINrsR8ZAIgFUIMexORL5tPwsfktOTxVYSv+AUAILuFYWES8IHl+hhIhpFGlKvWFiz9ZEusrPcSBQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <script>
+      let users = [];
+      let currentPage = 1;
+      let perPage = 2;
+      let totalPages ;
+      let userForPage = [];
+
+      async function getUser() {
+        try {
+          const value = await axios.get(
+            "https://jsonplaceholder.typicode.com/users"
+          );
+          users = value.data;
+          console.log({users})
+          userForPage = users.slice(
+            (currentPage - 1) * perPage,
+            ( currentPage -1 ) * perPage + perPage
+          );
+
+          createPage();
+          renderUser(userForPage);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      function handleClickPage(index) {
+        currentPage= index
+        userForPage = users.slice(
+            (currentPage - 1) * perPage,
+            ( currentPage -1 ) * perPage + perPage
+          );
+          renderUser(userForPage)
+
+
+      }
+
+      function createPage() {
+        totalPages = users.length / perPage;
+        console.log(totalPages);
+        for (var i = 0; i < totalPages; i++) {
+          console.log([i])
+          document.querySelector('.pagination').innerHTML += `<li class="numberPage" onclick="handleClickPage(${i})">${ i+1}</li>`
+        }
+        
+        
+      
+      
+      }
+
+      function renderUser(array) {
+        let element = `
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                </tr>
+            
+            `;
+
+        array.map((value, index) => {
+          console.log(value);
+          element += `
+                <tr key=${index}>
+                    <td>${value.id}</td>
+                    <td>${value.name}</td>
+                </tr>
+                `;
+        });
+
+        document.getElementById("table").innerHTML = element;
+      }
+
+      function searchUsers() {
+        let valueSearchInput = document.querySelector("#search").value;
+        let searchUser = users.filter((user, index) => {
+          return user.name
+            .toUpperCase()
+            .includes(valueSearchInput.toUpperCase());
+        });
+        renderUser(searchUser);
+      }
+
+      function sort() {
+        let valueSort = document.querySelector("#sort").value;
+        console.log(valueSort);
+        users.sort((a, b) => {
+          if (valueSort === "az") {
+            return a.name.localeCompare(b.name);
+          } else if (valueSort === "za") {
+            return b.name.localeCompare(a.name);
+          } else {
+            return a.id - b.id;
+          }
+        });
+        renderUser(users);
+      }
+    </script>
+  </body>
+</html>
